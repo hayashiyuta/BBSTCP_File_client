@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+
 #include <cstdlib>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
@@ -107,10 +108,14 @@ bool Connect(std::string serverIpv4Address, unsigned short port)
 // 文字列送信
 bool Send(char buff[MESSAGELENGTH])
 {
-    std::ifstream imageFile(buff,
+    /*std::ifstream imageFile(buff,
                             std::ios::binary);//データを読み込む
-    std::string imageData((std::istreambuf_iterator<char>(imageFile)), std::istreambuf_iterator<char>());//ファイルから読み込んだデータを格納
-    int ret = send(sock, imageData.c_str(), imageData.size(), 0);
+    std::string imageData((std::istreamb_iterator<char>(imageFile)), std::istreambuf_iterator<char>());//ファイルから読み込んだデータを格納
+    int ret = send(sock, imageData.c_str(), imageData.size(), 0);*/
+    //int ret = send(sock, buff, MESSAGELENGTH, 0);//文字送るだけ
+    std::ifstream text(buff);
+    std::string   file((std::istreambuf_iterator<char>(text)), std::istreambuf_iterator<char>());
+    int ret = send(sock, file.c_str(), file.size(), 0);
     return (ret == MESSAGELENGTH);
 
 }
