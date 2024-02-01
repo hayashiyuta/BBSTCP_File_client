@@ -49,6 +49,7 @@ int main()
     while (true)
     {
         char buff[MESSAGELENGTH];
+        memset(buff, 0, sizeof(buff));
         std::cout << "Input message:";
         std::cin >> buff;
         Send(buff);
