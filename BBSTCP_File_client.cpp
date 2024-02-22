@@ -15,10 +15,14 @@ const unsigned short SERVERPORT = 8888;
 const unsigned int MESSAGELENGTH = 1024;
 
 int sock;
+int len;
+const int text = 1;
+const int file = 2;
 bool Init();
 bool Socket(int sockType);
 bool Connect(std::string serverIpv4Address, unsigned short port);
 bool Send(char buff[MESSAGELENGTH]);
+bool Sendfile(char buff[MESSAGELENGTH]);
 bool Exit();
 
 
@@ -50,9 +54,26 @@ int main()
     {
         char buff[MESSAGELENGTH];
         memset(buff, 0, sizeof(buff));
-        std::cout << "Input message:";
-        std::cin >> buff;
-        Send(buff);
+        std::cout << "---Text chat or receive files---" << std::endl;
+        std::cout << "Text : 1, File : 2" << std::endl;
+        std::cin >> len;
+        if (len == text)
+        {
+            std::cout << "Input message:";
+            std::cin >> buff;
+            Send(buff);
+        }
+        if (len == file)
+        {
+            std::cout << "Input filename:";
+            std::cin >> buff;
+            Sendfile(buff);
+        }
+        else
+        {
+            std::cout << "Error: Untargeted input;" << std::endl;
+        }
+        
     }
 
     if (!Exit())
@@ -109,16 +130,20 @@ bool Connect(std::string serverIpv4Address, unsigned short port)
 // 文字列送信
 bool Send(char buff[MESSAGELENGTH])
 {
+    int ret = send(sock, buff, MESSAGELENGTH, 0);//文字送るだけ
+    return (ret == MESSAGELENGTH);
+}
+
+bool Sendfile(char buff[MESSAGELENGTH])
+{
     /*std::ifstream imageFile(buff,
                             std::ios::binary);//データを読み込む
     std::string imageData((std::istreamb_iterator<char>(imageFile)), std::istreambuf_iterator<char>());//ファイルから読み込んだデータを格納
     int ret = send(sock, imageData.c_str(), imageData.size(), 0);*/
-    //int ret = send(sock, buff, MESSAGELENGTH, 0);//文字送るだけ
     std::ifstream text(buff);
     std::string   file((std::istreambuf_iterator<char>(text)), std::istreambuf_iterator<char>());
     int ret = send(sock, file.c_str(), file.size(), 0);
     return (ret == MESSAGELENGTH);
-
 }
 
 // 終了処理
