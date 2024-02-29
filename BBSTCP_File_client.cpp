@@ -69,10 +69,7 @@ int main()
             std::cin >> buff;
             Sendfile(buff);
         }
-        else
-        {
-            std::cout << "Error: Untargeted input;" << std::endl;
-        }
+       
         
     }
 
